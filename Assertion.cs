@@ -8,24 +8,13 @@ using System.Text.RegularExpressions;
 namespace JSLOL.Parser
 {
     /// <summary>
-    /// Class to parse assertion
+    /// Class to parse assertion to a variable
     /// </summary>
     class Assertion : CodeElement
     {
-        /*static Regex StartMarker = Toolbox.CreateRegex(Toolbox.RegExpSources[Toolbox.RegExpTemplates.assertion]);
-        static Regex StopMarker = Toolbox.CreateRegex(Toolbox.RegExpSources[Toolbox.RegExpTemplates.endOfInstruction]);
-        */
         static int[] AllowedCodeElements = {
             (int)Toolbox.codeElements.Expression
         };
-
-      
-
-        /*protected override System.Text.RegularExpressions.Regex _startMarker
-            { get { return Assertion.StartMarker;  } }
-
-        protected override System.Text.RegularExpressions.Regex _stopMarker
-            { get { return Assertion.StopMarker; } }*/
 
         protected override int[] _allowedCodeElements
             { get { return Assertion.AllowedCodeElements; } }

@@ -10,7 +10,7 @@ namespace JSLOL.Parser
     class Comment : CodeElement
 
     {
-        static Regex CommentRE = Toolbox.CreateRegex(Toolbox.RegExpTemplates.Comment);
+        static Regex CommentRE = Toolbox.CreateRegex(Toolbox.RegExpTemplates.comment);
         private String value;
         protected override int[] _allowedCodeElements
             {get { throw new NotImplementedException(); }}
@@ -24,9 +24,6 @@ namespace JSLOL.Parser
             this.offset += m.Length;
             this.value = m.Value;
 
-#if DEBUG
-            Console.WriteLine("offset : {0} :: Found comment : {1}", this.offset, this.value);
-#endif
         }
 
         public Comment(Code code) : base(code, 0, 0) { }

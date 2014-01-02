@@ -48,10 +48,6 @@ namespace JSLOL.Parser
             this._match = m.Value;
             this.offset += m.Length;
 
-            #if DEBUG
-            Cmd.WriteLine("offset : {3} :: Declaration '{0}' '{1}' '{2}'", this._type, this._advType, this._name, this.offset);
-            #endif
-
             this.matchCodeElement((int)Toolbox.codeElements.Assertion);
             this.matchEndOfInstructionMarker();
         }

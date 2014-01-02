@@ -41,10 +41,6 @@ namespace JSLOL.Parser
             this.value = Decimal.Parse(m.Value, 
                 NumberStyles.Any,CultureInfo.InvariantCulture
                 );
-            
-            #if DEBUG
-            Console.WriteLine("offset : {0} :: Found numeric value : {1}", this.offset, this.value);
-            #endif
 
         }
 

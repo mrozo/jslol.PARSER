@@ -4,6 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
+#if DEBUG
+using System.Reflection;
+#endif
+
 namespace JSLOL.Parser
 {
 
@@ -15,6 +19,15 @@ namespace JSLOL.Parser
         protected Code _code;
         protected int _indentionLevel;
         abstract protected int[] _allowedCodeElements { get; }
+
+        /// <summary>
+        /// Variable to store starting point of the parsed expression
+        /// </summary>
+        protected int _startOffset = 0;
+        /// <summary>
+        /// Variable to store ending point of the parsed expression
+        /// </summary>
+        protected int _stopOffset = 0;
 
         protected List <CodeElement> codeElements = new List<CodeElement>();
         protected int _offset = 0 ;
@@ -37,8 +50,18 @@ namespace JSLOL.Parser
         {
             this._code = code;
             this._offset = offset;
+            this._startOffset = offset;
             this._indentionLevel = indentionLevel;
-            this.parse();
+            this.parse(); //throws CodeElementNotFound exception
+            this._stopOffset = this._offset;
+#if DEBUG
+            Console.WriteLine("offset : {0} :: Found {1} : '{2}'",
+                this.offset,
+                this.GetType().Name,
+                this._code.source.Substring(this._startOffset,this._stopOffset-this._startOffset)
+            );
+#endif
+
         }
 
         /// <summary>
