@@ -4,6 +4,7 @@
 
 
 [pP]roperties/
+*.csproj
 
 # User-specific files
 *.suo
