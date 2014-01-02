@@ -8,6 +8,9 @@ namespace JSLOL.Parser
 {
     public class StringElement : CodeElement
     {
+        static Regex StrValRE = Toolbox.CreateRegex(Toolbox.RegExpSources[Toolbox.RegExpTemplates.stringValue]);
+        private Match match;
+        private String value;
         protected override int[] _allowedCodeElements
         {
             get { throw new NotImplementedException(); }
@@ -15,7 +18,11 @@ namespace JSLOL.Parser
 
         protected override void parse()
         {
-            throw new NotImplementedException();
+            this.match = this.matchRegexp(StringElement.StrValRE);
+            if (!match.Success)
+                throw new CodeElementNotFound(this._offset, this._code, StringElement.StrValRE.ToString());
+
+            this.value = this.match.Groups["value"].Value;
         }
 
         public StringElement(Code code) : base(code, 0, 0) { }

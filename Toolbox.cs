@@ -47,7 +47,8 @@ namespace JSLOL.Parser
             ,number
             ,assertion
             ,endOfInstruction
-            ,Comment
+            ,comment
+            ,stringValue
         };
 
         /// <summary>
@@ -68,7 +69,8 @@ namespace JSLOL.Parser
                 ,{RegExpTemplates.number,@"[+-]?[0-9]*\.[0-9]"}
                 ,{RegExpTemplates.assertion,@"="}
                 ,{RegExpTemplates.endOfInstruction,@";"}
-                ,{RegExpTemplates.Comment,@"#([^\n\r]*|(\\)*)*"}
+                ,{RegExpTemplates.comment,@"#([^\n\r]*|(\\)*)*"}
+                ,{RegExpTemplates.stringValue,"\"(?<value>[^\\\"]*|\\\\.)\""}
 
             };
 
@@ -100,9 +102,9 @@ namespace JSLOL.Parser
         }
 
         /// <summary>
-        /// Creates regexp object to use with the parser
+        /// Creates regexp object to use with the parser. Method prepends source with "\G" flag and 
         /// </summary>
-        /// <param name="source">source of the regexp</param>
+        /// <param name="source">source of the regexp(don't use \G falg!)</param>
         /// <returns>Regexp object</returns>
         static public Regex CreateRegex(String source)
         {
