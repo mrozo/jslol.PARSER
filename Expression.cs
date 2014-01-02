@@ -13,19 +13,21 @@ namespace JSLOL.Parser
     public class Expression : CodeElement
     {
 
-        //TODO nie znajduje numeru
         static public int[] allowedCodeElements = {
             (int)Toolbox.codeElements.Number
-            ,(int)Toolbox.codeElements.String                  
+            ,(int)Toolbox.codeElements.String   
+            ,(int)Toolbox.codeElements.MethodElement   
         };
         
         protected override int[] _allowedCodeElements
             { get { return Expression.allowedCodeElements; } }
 
-        protected override void parse()
+        protected override void Parse()
         {
             //TODO: parsing extended expressions
             this.matchAllowedCodeElementsOnce();
+            if (this.codeElements.Count==0)
+                throw new CodeElementNotFound();
         }
         
         public Expression(Code code) : base(code, 0, 0) { }

@@ -20,12 +20,17 @@ namespace JSLOL.Parser
             Code
             ,Object
             ,Declaration
+            ,FieldDeclaration
             ,Expression
             ,Number
             ,String
             ,MethodCall
             ,Comment
             ,Assertion
+            ,MethodElement
+            ,MethodArgumentsList
+            ,BlockOfCode
+            ,Instruction
         };
 
         /// <summary>
@@ -49,6 +54,11 @@ namespace JSLOL.Parser
             ,endOfInstruction
             ,comment
             ,stringValue
+            ,argumentListStartMarker
+            ,argumentListStopMarker
+            ,blockOfCodeStartMarker
+            ,blockOfCodeStopMarker
+            ,argumentListSeparator
         };
 
         /// <summary>
@@ -71,6 +81,11 @@ namespace JSLOL.Parser
                 ,{RegExpTemplates.endOfInstruction,@";"}
                 ,{RegExpTemplates.comment,@"#([^\n\r]*|(\\)*)*"}
                 ,{RegExpTemplates.stringValue,"\"(?<value>[^\\\"]*|\\\\.)\""}
+                ,{RegExpTemplates.argumentListStartMarker,@"m\("}
+                ,{RegExpTemplates.argumentListStopMarker,@"\)"}
+                ,{RegExpTemplates.blockOfCodeStartMarker,@"{"}
+                ,{RegExpTemplates.blockOfCodeStopMarker,@"}"}
+                ,{RegExpTemplates.argumentListSeparator,@","}
 
             };
 
@@ -136,7 +151,13 @@ namespace JSLOL.Parser
                     case (int)Toolbox.codeElements.Object: return new ObjectElement(code, offset, indentionLevel); 
                     case (int)Toolbox.codeElements.String: return new StringElement(code, offset, indentionLevel); 
                     case (int)Toolbox.codeElements.Assertion: return  new Assertion(code, offset, indentionLevel); 
-                    case (int)Toolbox.codeElements.Comment: return new Comment(code, offset, indentionLevel); 
+                    case (int)Toolbox.codeElements.Comment: return new Comment(code, offset, indentionLevel);
+                    case (int)Toolbox.codeElements.MethodElement: return new MethodElement(code, offset, indentionLevel);
+                    case (int)Toolbox.codeElements.FieldDeclaration: return new FieldDeclaration(code, offset, indentionLevel);
+                    case (int)Toolbox.codeElements.MethodArgumentsList: return new MethodsArgumentsList(code, offset, indentionLevel);
+                    case (int)Toolbox.codeElements.BlockOfCode: return new BlockOfCode(code, offset, indentionLevel);
+                    case (int)Toolbox.codeElements.Instruction: return new Instruction(code, offset, indentionLevel);
+                    
                     default: throw new CriticalException("Internal parser exception : unknown code element id : "+id.ToString());
                 }
             }

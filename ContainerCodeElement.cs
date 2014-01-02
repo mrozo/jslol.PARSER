@@ -23,19 +23,9 @@ namespace JSLOL.Parser
         /// </summary>
         protected void matchAllowedTypesAndMarkers()
         {
-            Match m; // temporary variable used to save RegExp match results
-            this.skipWhiteChars(true);
-            m = this._code.match(this._startMarker, this._offset);
-            if (m.Length == 0)
-                throw new CodeElementNotFound(this.offset, this._code, this._startMarker.ToString());
-            this._offset += m.Length;
-
+            this.matchMandatoryRegexp(this._startMarker,true);
             this.matchAllowedTypes();
-            
-            m = this._code.match(this._stopMarker, this._offset);
-            if (m.Length == 0)
-                throw new CodeElementNotFound(this.offset, this._code, this._stopMarker.ToString());
-            this._offset += m.Length;
+            this.matchMandatoryRegexp(this._stopMarker,true);
         }
         
         /// <summary>

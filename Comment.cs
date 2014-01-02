@@ -15,15 +15,9 @@ namespace JSLOL.Parser
         protected override int[] _allowedCodeElements
             {get { throw new NotImplementedException(); }}
 
-        protected override void parse()
+        protected override void Parse()
         {
-            Match m = this._code.match(Comment.CommentRE, this.offset);
-            if (!m.Success)
-                throw new CodeElementNotFound();
-
-            this.offset += m.Length;
-            this.value = m.Value;
-
+            this.value = this.matchMandatoryRegexp(Comment.CommentRE).Value;
         }
 
         public Comment(Code code) : base(code, 0, 0) { }

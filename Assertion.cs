@@ -23,10 +23,9 @@ namespace JSLOL.Parser
         public Assertion(Code code, int offset) : base(code, offset, 0) { }
         public Assertion(Code code, int offset, int indentionLevel) : base(code, offset, indentionLevel) { }
 
-        protected override void parse()
+        protected override void Parse()
         {
-            if (!this.matchRegexp(Toolbox.stdRegex[Toolbox.RegExpTemplates.assertion]).Success)
-                throw new CodeElementNotFound(this._offset, this._code, Toolbox.stdRegex[Toolbox.RegExpTemplates.assertion].ToString());
+            this.matchMandatoryRegexp(Toolbox.stdRegex[Toolbox.RegExpTemplates.assertion]);
             this.matchAllowedCodeElementsOnce(); 
         }
 

@@ -14,7 +14,14 @@ namespace JSLOL.Parser
     public class CodeElementNotFound : SystemException
     {
         public CodeElementNotFound(int offset, Code code, String regex) 
-            : base(String.Format("char offset {0} :  Expected \"{1}\" , found : {2}", offset, regex, code.source.Substring(offset, 15)))
+            : base(
+                String.Format(
+                    "char offset {0} :  Expected \"{1}\" , found : {2}",
+                    offset,
+                    regex,
+                    code.source.Substring(offset, offset+15>code.source.Length?code.source.Length-offset:15)
+                )
+            )
         {}
 
         public CodeElementNotFound() : base() { } 

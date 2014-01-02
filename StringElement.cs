@@ -16,7 +16,7 @@ namespace JSLOL.Parser
             get { throw new NotImplementedException(); }
         }
 
-        protected override void parse()
+        protected override void Parse()
         {
             this.match = this.matchRegexp(StringElement.StrValRE);
             if (!match.Success)

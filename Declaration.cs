@@ -19,15 +19,12 @@ namespace JSLOL.Parser
                 Toolbox.RegExpSources[TEST.whiteChar] + @"+" + 
                 @"(?<name>" + Toolbox.RegExpSources[TEST.identificator] + @")"
             );
-        static private int[] allowedCodeElements = {
-            (int)Toolbox.codeElements.Declaration
-            ,(int)Toolbox.codeElements.Comment
-        };
+        static private int[] allowedCodeElements 
+            { get { throw new NotImplementedException();} }
         static Regex startMarker = Toolbox.CreateRegex(Toolbox.RegExpSources[Toolbox.RegExpTemplates.objectStart]);
         static Regex stopMarker = Toolbox.CreateRegex(Toolbox.RegExpSources[Toolbox.RegExpTemplates.objectStop]);
 
         private String _type, _advType, _name, _match;
-        private CodeElement value;
         private CodeElement initialization = null;
 
         override protected int[] _allowedCodeElements { get { return ObjectElement.allowedCodeElements; } }
@@ -36,20 +33,16 @@ namespace JSLOL.Parser
         public Declaration(Code code,int offset) : base(code,offset,0) { }
         public Declaration(Code code, int offset, int indentionLevel) : base(code, offset, indentionLevel) { }
 
-        protected override void parse() 
+        protected override void Parse() 
         {
-            Match m = this._code.match(Declaration.signatureRE,this.offset);
-            if (m.Length == 0)
-                throw new CodeElementNotFound(this.offset, this._code, Declaration.signatureRE.ToString());
+            Match m = this.matchMandatoryRegexp(signatureRE);
 
             this._type = m.Groups["type"].Value;
             this._name = m.Groups["name"].Value;
             this._advType = m.Groups["advtype"].Success ? m.Groups["advtype"].Value : null;
             this._match = m.Value;
-            this.offset += m.Length;
 
             this.matchCodeElement((int)Toolbox.codeElements.Assertion);
-            this.matchEndOfInstructionMarker();
         }
 
     }

@@ -24,7 +24,7 @@ namespace JSLOL.Parser
             get { throw new NotImplementedException(); }
         }
 
-        protected override void parse()
+        protected override void Parse()
         {
             Match m = null;
             foreach (Regex r in NumberElement.valueRE)

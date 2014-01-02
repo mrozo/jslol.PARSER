@@ -26,7 +26,7 @@ namespace JSLOL.Parser
         {}
 
 
-        protected override void parse()
+        protected override void Parse()
         {
             this.elements.Add(Toolbox.createCodeElement((int)Toolbox.codeElements.Object,this._code,this.offset,this._indentionLevel));
         }

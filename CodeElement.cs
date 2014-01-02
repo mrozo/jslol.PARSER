@@ -28,8 +28,13 @@ namespace JSLOL.Parser
         /// Variable to store ending point of the parsed expression
         /// </summary>
         protected int _stopOffset = 0;
-
+        /// <summary>
+        /// List of code element objects found inside.
+        /// </summary>
         protected List <CodeElement> codeElements = new List<CodeElement>();
+        /// <summary>
+        /// Current code offset for regex matching
+        /// </summary>
         protected int _offset = 0 ;
 
         /// <summary>
@@ -52,7 +57,7 @@ namespace JSLOL.Parser
             this._offset = offset;
             this._startOffset = offset;
             this._indentionLevel = indentionLevel;
-            this.parse(); //throws CodeElementNotFound exception
+            this.Parse(); //throws CodeElementNotFound exception
             this._stopOffset = this._offset;
 #if DEBUG
             Console.WriteLine("offset : {0} :: Found {1} : '{2}'",
@@ -86,8 +91,19 @@ namespace JSLOL.Parser
         /// <returns>matched code element or null on failure</returns>
         protected CodeElement matchAllowedCodeElementsOnce()
         {
+            return this.MatchCodeElemntFromArrayOnce(this._allowedCodeElements);
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="arr">array of CodeElements ID's from Toolbox.codeElements</param>
+        /// <returns></returns>
+        protected CodeElement MatchCodeElemntFromArrayOnce(int[] arr)
+        {
             CodeElement e = null;
-            foreach (int eId in this._allowedCodeElements)
+            foreach (int eId in arr)
                 if ((e = this.matchCodeElement(eId)) != null)
                     return e;
 
@@ -122,11 +138,39 @@ namespace JSLOL.Parser
                 throw new CodeElementNotFound(this._offset, this._code, Toolbox.stdRegex[Toolbox.RegExpTemplates.endOfInstruction].ToString());
         }
 
+
         /// <summary>
-        /// Matches regular expression against the code
+        /// Matches regular expression against the code, automatticaly increases _offset.throws CodeElementNotFound exception onf failure
         /// </summary>
         /// <param name="re">regular expression to match</param>
-        /// <returns></returns>
+        /// <param name="skipWhiteChars">skip white chars before the element</param>
+        /// <returns>matched data</returns>
+        protected Match matchMandatoryRegexp(Regex re,bool skipWhiteChars)
+        {
+            if (skipWhiteChars)
+                this.skipWhiteChars();
+            Match m = this._code.match(re, this._offset);
+            if (!m.Success)
+                throw new CodeElementNotFound(this._offset, this._code, re.ToString());
+            this._offset += m.Length;
+            return m;
+        }
+
+        /// <summary>
+        /// Matches regular expression against the code, automatticaly increases _offset.throws CodeElementNotFound exception onf failure
+        /// </summary>
+        /// <param name="re">regular expression to match</param>
+        /// <returns>matched data</returns>
+        protected Match matchMandatoryRegexp(Regex re)
+        {
+            return this.matchMandatoryRegexp(re,false);
+        }
+
+        /// <summary>
+        /// Matches regular expression against the code, automatticaly increases _offset.
+        /// </summary>
+        /// <param name="re">regular expression to match</param>
+        /// <returns>matched data</returns>
         protected Match matchRegexp(Regex re)
         {
             Match m = this._code.match(re, this._offset);
@@ -137,7 +181,7 @@ namespace JSLOL.Parser
         /// <summary>
         /// The main methot that parses the code.
         /// </summary>
-        protected abstract void parse();
+        protected abstract void Parse();
 
 
     }

@@ -11,7 +11,7 @@ namespace JSLOL.Parser
         static Regex startMarker = Toolbox.CreateRegex(Toolbox.RegExpSources[Toolbox.RegExpTemplates.objectStart]);
         static Regex stopMarker  = Toolbox.CreateRegex(Toolbox.RegExpSources[Toolbox.RegExpTemplates.objectStop]);
         static public int[] allowedCodeElements = {
-            (int)Toolbox.codeElements.Declaration
+            (int)Toolbox.codeElements.FieldDeclaration
             ,(int)Toolbox.codeElements.Comment
         };
 
@@ -28,7 +28,7 @@ namespace JSLOL.Parser
         public ObjectElement(Code code,int offset) : base(code,offset,0) { }
         public ObjectElement(Code code, int offset, int indentionLevel) : base(code, offset, indentionLevel) { }
 
-        protected override void parse()
+        protected override void Parse()
         {
             this.matchAllowedTypesAndMarkers();
         }
