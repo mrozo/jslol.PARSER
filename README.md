@@ -3,15 +3,15 @@ jslol.PARSER
 
 JavaScript Like Object Language Parser - C# library to automatically translate JSLOL to C#.
 
-# JSLOL Description
+## JSLOL Description
 
-JSLOL is an attempt to create a perfect object oriented language. The target is to create language specified by following features : 
+JSLOL is an attempt to create a perfect object oriented language. The target is to create language specified by the following list of features : 
 * everything is an object (even method),
 * basic type control,
 * support for classic inheritance (from one, or multiple parrents)
 * support for dynamic class object modification (eg. method copy)
 
-# Code example
+## Code example
 Early JSLOL code exmple.
 ```
 {
@@ -24,7 +24,7 @@ Early JSLOL code exmple.
 }
 ```
 
-# Usage example
+## Usage example
 C# code.
 ```
 using JSLOL.Parser;
