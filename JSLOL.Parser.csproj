@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assertion.cs" />
+    <Compile Include="BlockOfCode.cs" />
     <Compile Include="Code.cs" />
     <Compile Include="CodeElement.cs" />
     <Compile Include="Comment.cs" />
@@ -47,7 +48,11 @@
     <Compile Include="Declaration.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Expression.cs" />
+    <Compile Include="FieldDeclaration.cs" />
+    <Compile Include="Instruction.cs" />
     <Compile Include="JSLOLParser.cs" />
+    <Compile Include="MethodArgumentsList.cs" />
+    <Compile Include="MethodElement.cs" />
     <Compile Include="NumberElement.cs" />
     <Compile Include="ObjectElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
