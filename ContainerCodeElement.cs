@@ -25,6 +25,7 @@ namespace JSLOL.Parser
         {
             this.matchMandatoryRegexp(this._startMarker,true);
             this.matchAllowedTypes();
+
             this.matchMandatoryRegexp(this._stopMarker,true);
         }
         
@@ -33,7 +34,7 @@ namespace JSLOL.Parser
         /// </summary>
         protected void matchAllowedTypes()
         {
-                while ( this.matchAllowedCodeElementsOnce() != null ) { }
+                while ( this.matchAllowedCodeElement() != null ) { }
         }
     }
 }

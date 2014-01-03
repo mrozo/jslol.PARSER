@@ -21,14 +21,20 @@ namespace JSLOL.Parser
         /// 
         /// </summary>
         /// <param name="source">Source to parses</param>
-        public SourceFile(String source)
-            : base(new Code(source),0,0)
-        {}
+        public SourceFile(String source) : base(new Code(source),0,0) {}
 
 
         protected override void Parse()
         {
-            this.elements.Add(Toolbox.createCodeElement((int)Toolbox.codeElements.Object,this._code,this.offset,this._indentionLevel));
+            //get comments, parse objectElement, again get comments,
+            //skip white chars and check if it's the end of the source
+            while (null != this.matchCodeElement((int)Toolbox.codeElement.Comment)) { }
+            this.matchCodeElement((int)Toolbox.codeElement.Object);
+            while (null != this.matchCodeElement((int)Toolbox.codeElement.Comment)) { }
+            this.skipWhiteChars(true);
+            if (this.offset != this._code.source.Length)
+                throw new Exception();
+
         }
     }
 }

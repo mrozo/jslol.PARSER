@@ -15,7 +15,7 @@ namespace JSLOL.Parser
         /// <summary>
         /// list of supported code elements
         /// </summary>
-        public enum codeElements
+        public enum codeElement
         {
             Code
             ,Object
@@ -27,10 +27,11 @@ namespace JSLOL.Parser
             ,MethodCall
             ,Comment
             ,Assertion
-            ,MethodElement
-            ,MethodArgumentsList
+            ,MethodExpression
+            ,ArgumentsDeclarationsList
             ,BlockOfCode
             ,Instruction
+            ,ArgumentsList
         };
 
         /// <summary>
@@ -38,7 +39,8 @@ namespace JSLOL.Parser
         /// </summary>
         public enum RegExpTemplates
         {
-            identificator
+            name
+            ,identificator
             ,advType
             ,methodType
             ,objectStart
@@ -54,6 +56,7 @@ namespace JSLOL.Parser
             ,endOfInstruction
             ,comment
             ,stringValue
+            ,methodExpressionMarker
             ,argumentListStartMarker
             ,argumentListStopMarker
             ,blockOfCodeStartMarker
@@ -65,15 +68,16 @@ namespace JSLOL.Parser
         /// basic Regexp sources for parsing and complex regexp creation.
         /// </summary>
         readonly public static Dictionary<RegExpTemplates, String> RegExpSources = new Dictionary<RegExpTemplates,string>() {
-                {RegExpTemplates.identificator,@"[a-z_]+[a-z0-9_-]*"}
+                {RegExpTemplates.name,@"[a-z_]+[a-z0-9_-]*"}
+                ,{RegExpTemplates.identificator,@"[a-z_]+[a-z0-9_-]*(\.[a-z_]+[a-z0-9_-]*)*"}
                 ,{RegExpTemplates.advType,@"((\[[\t ]*\])|(\([\t ]*\))|({[\t ]*}))"}
                 ,{RegExpTemplates.methodType,@"\(\[ \t]*\)"}
                 ,{RegExpTemplates.objectStart,@"{"}
                 ,{RegExpTemplates.objectStop,@"}"}
                 ,{RegExpTemplates.whiteChar,@"[ \t]"}
-                ,{RegExpTemplates.whiteCharNewL,@"([ \t\n]|\r\n)"}
+                ,{RegExpTemplates.whiteCharNewL,@"[ \t\n\r]"}
                 ,{RegExpTemplates.whiteChars,@"[ \t]+"}
-                ,{RegExpTemplates.whiteCharsNewL,@"([ \t\n]|\r\n)+"}
+                ,{RegExpTemplates.whiteCharsNewL,@"[ \t\n\r]+"}
                 ,{RegExpTemplates.arrayStart,@"\["}
                 ,{RegExpTemplates.arrayEnd,@"\]"}
                 ,{RegExpTemplates.number,@"[+-]?[0-9]*\.[0-9]"}
@@ -81,7 +85,8 @@ namespace JSLOL.Parser
                 ,{RegExpTemplates.endOfInstruction,@";"}
                 ,{RegExpTemplates.comment,@"#([^\n\r]*|(\\)*)*"}
                 ,{RegExpTemplates.stringValue,"\"(?<value>[^\\\"]*|\\\\.)\""}
-                ,{RegExpTemplates.argumentListStartMarker,@"m\("}
+                ,{RegExpTemplates.methodExpressionMarker,@"m"}
+                ,{RegExpTemplates.argumentListStartMarker,@"\("}
                 ,{RegExpTemplates.argumentListStopMarker,@"\)"}
                 ,{RegExpTemplates.blockOfCodeStartMarker,@"{"}
                 ,{RegExpTemplates.blockOfCodeStopMarker,@"}"}
@@ -136,7 +141,7 @@ namespace JSLOL.Parser
         /// <param name="id">Code element identificator taken from enum Toolbox.codeElements</param>
         /// <param name="code">The Code object to pass as an argument</param>
         /// <param name="offset">The offset to pass as an argument</param>
-        /// <returns></returns>
+        /// <returns>Code element object identified by id or NULL on failure</returns>
         public static CodeElement createCodeElement(int id, Code code, int offset,int indentionLevel)
         {
             try
@@ -144,19 +149,20 @@ namespace JSLOL.Parser
                 offset += code.getWhiteChars(offset,true).Length;
                 switch (id)
                 {
-                    case (int)Toolbox.codeElements.Declaration: return new Declaration(code, offset, indentionLevel); 
-                    case (int)Toolbox.codeElements.Expression: return new Expression(code, offset, indentionLevel); 
-                    //case (int)Toolbox.codeElements.MethodCall:    return new (code, offset, indentionLevel); 
-                    case (int)Toolbox.codeElements.Number: return new NumberElement(code, offset, indentionLevel); 
-                    case (int)Toolbox.codeElements.Object: return new ObjectElement(code, offset, indentionLevel); 
-                    case (int)Toolbox.codeElements.String: return new StringElement(code, offset, indentionLevel); 
-                    case (int)Toolbox.codeElements.Assertion: return  new Assertion(code, offset, indentionLevel); 
-                    case (int)Toolbox.codeElements.Comment: return new Comment(code, offset, indentionLevel);
-                    case (int)Toolbox.codeElements.MethodElement: return new MethodElement(code, offset, indentionLevel);
-                    case (int)Toolbox.codeElements.FieldDeclaration: return new FieldDeclaration(code, offset, indentionLevel);
-                    case (int)Toolbox.codeElements.MethodArgumentsList: return new MethodsArgumentsList(code, offset, indentionLevel);
-                    case (int)Toolbox.codeElements.BlockOfCode: return new BlockOfCode(code, offset, indentionLevel);
-                    case (int)Toolbox.codeElements.Instruction: return new Instruction(code, offset, indentionLevel);
+                    case (int)Toolbox.codeElement.Declaration: return new Declaration(code, offset, indentionLevel);
+                    case (int)Toolbox.codeElement.Expression: return new Expression(code, offset, indentionLevel);
+                    case (int)Toolbox.codeElement.ArgumentsList: return new ArgumentsList(code, offset, indentionLevel);
+                    case (int)Toolbox.codeElement.MethodCall:    return new MethodCall(code, offset, indentionLevel); 
+                    case (int)Toolbox.codeElement.Number: return new NumberElement(code, offset, indentionLevel); 
+                    case (int)Toolbox.codeElement.Object: return new ObjectElement(code, offset, indentionLevel); 
+                    case (int)Toolbox.codeElement.String: return new StringElement(code, offset, indentionLevel); 
+                    case (int)Toolbox.codeElement.Assertion: return  new Assertion(code, offset, indentionLevel); 
+                    case (int)Toolbox.codeElement.Comment: return new Comment(code, offset, indentionLevel);
+                    case (int)Toolbox.codeElement.MethodExpression: return new MethodExpression(code, offset, indentionLevel);
+                    case (int)Toolbox.codeElement.FieldDeclaration: return new FieldDeclaration(code, offset, indentionLevel);
+                    case (int)Toolbox.codeElement.ArgumentsDeclarationsList: return new ArgumentsDeclarationsList(code, offset, indentionLevel);
+                    case (int)Toolbox.codeElement.BlockOfCode: return new BlockOfCode(code, offset, indentionLevel);
+                    case (int)Toolbox.codeElement.Instruction: return new Instruction(code, offset, indentionLevel);
                     
                     default: throw new CriticalException("Internal parser exception : unknown code element id : "+id.ToString());
                 }

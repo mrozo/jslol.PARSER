@@ -5,6 +5,9 @@ using System.Text;
 
 namespace JSLOL.Parser
 {
+    /// <summary>
+    /// Class that is used to parse field declaration in object : <![CDATA[<declaration> ; ]]>
+    /// </summary>
     class FieldDeclaration : Declaration
     {
         public FieldDeclaration(Code code) : base(code, 0,0) { }

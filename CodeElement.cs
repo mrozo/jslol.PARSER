@@ -36,7 +36,6 @@ namespace JSLOL.Parser
         /// Current code offset for regex matching
         /// </summary>
         protected int _offset = 0 ;
-
         /// <summary>
         /// offset used to parse code
         /// </summary>
@@ -53,12 +52,18 @@ namespace JSLOL.Parser
         /// <param name="indentionLevel">Code indention level aka. number of '\t'</param>
         public CodeElement(Code code, int offset, int indentionLevel)
         {
+#if DEBUG
+            if (this.GetType().Name == typeof(ObjectElement).Name)
+                Console.WriteLine();
+#endif
+
             this._code = code;
             this._offset = offset;
             this._startOffset = offset;
             this._indentionLevel = indentionLevel;
             this.Parse(); //throws CodeElementNotFound exception
             this._stopOffset = this._offset;
+
 #if DEBUG
             Console.WriteLine("offset : {0} :: Found {1} : '{2}'",
                 this.offset,
@@ -69,38 +74,62 @@ namespace JSLOL.Parser
 
         }
 
+
         /// <summary>
-        /// Match selected CodeElement indentified by eI. When successfull add it to codeElements list and icrease parsing offset
+        /// Match selected CodeElement indentified by eID When successfull add it to codeElements list and icrease parsing offset
         /// </summary>
-        /// <param name="eId">code element identificator taken from enum Toolbox.codeElements</param>
+        /// <param name="eID">ID of code element to match</param>
+        /// <param name="mandatory">If true method drops CodeElementNotFound exception on failure</param>
         /// <returns></returns>
-        protected CodeElement matchCodeElement(int eId)
+        protected CodeElement matchCodeElement(int eID, bool mandatory)
         {
-            CodeElement e = Toolbox.createCodeElement(eId, this._code, this._offset, this._indentionLevel);
+            CodeElement e = Toolbox.createCodeElement(eID, this._code, this._offset, this._indentionLevel);
             if (e != null)
             {
                 this.codeElements.Add(e);
                 this._offset = e.offset;
             }
+            else if (mandatory)
+                throw new CodeElementNotFound();
             return e;
         }
+
+        /// <summary>
+        /// Match selected CodeElement indentified by eI. When successfull add it to codeElements list and icrease parsing offset. Alias for CodeElement MatchCodeElement(int,bool)
+        /// </summary>
+        /// <param name="eID">code element identificator taken from enum Toolbox.codeElements</param>
+        /// <returns></returns>
+        protected CodeElement matchCodeElement(int eID)
+        {
+            return this.matchCodeElement(eID, false);
+        }
+
+        /// <summary>
+        /// Match selected CodeElement indentified by eI. When successfull add it to codeElements list and icrease parsing offset otherwise throws CodeElementNotFound exception. Alias for CodeElement MatchCodeElement(int,bool)
+        /// </summary>
+        /// <param name="eID">code element identificator taken from enum Toolbox.codeElements</param>
+        /// <returns></returns>
+        protected CodeElement matchMandatoryCodeElement(int eID)
+        {
+            return this.matchCodeElement(eID, true);
+        }
+
 
         /// <summary>
         /// iterate over _allowedCodeElements property and stops on first match. When no match returns null
         /// </summary>
         /// <returns>matched code element or null on failure</returns>
-        protected CodeElement matchAllowedCodeElementsOnce()
+        protected CodeElement matchAllowedCodeElement()
         {
-            return this.MatchCodeElemntFromArrayOnce(this._allowedCodeElements);
+            return this.MatchCodeElemntFromArray(this._allowedCodeElements);
         }
 
-
         /// <summary>
-        /// 
+        /// Iterates over given array of code elements ID's and stops on first match.
         /// </summary>
         /// <param name="arr">array of CodeElements ID's from Toolbox.codeElements</param>
-        /// <returns></returns>
-        protected CodeElement MatchCodeElemntFromArrayOnce(int[] arr)
+        /// <returns>Matched code element object or NULL</returns>
+        protected CodeElement MatchCodeElemntFromArray(int[] arr)
         {
             CodeElement e = null;
             foreach (int eId in arr)
@@ -128,14 +157,11 @@ namespace JSLOL.Parser
 
 
         /// <summary>
-        /// 
+        /// Matches <![CDATA[<endofinstructionmarker>]]>
         /// </summary>
         protected void matchEndOfInstructionMarker()
         {
-
-            Match m = this.matchRegexp(Toolbox.stdRegex[Toolbox.RegExpTemplates.endOfInstruction]);
-            if (m.Length == 0)
-                throw new CodeElementNotFound(this._offset, this._code, Toolbox.stdRegex[Toolbox.RegExpTemplates.endOfInstruction].ToString());
+            this.matchMandatoryRegexp(Toolbox.stdRegex[Toolbox.RegExpTemplates.endOfInstruction],true);
         }
 
 
@@ -147,13 +173,7 @@ namespace JSLOL.Parser
         /// <returns>matched data</returns>
         protected Match matchMandatoryRegexp(Regex re,bool skipWhiteChars)
         {
-            if (skipWhiteChars)
-                this.skipWhiteChars();
-            Match m = this._code.match(re, this._offset);
-            if (!m.Success)
-                throw new CodeElementNotFound(this._offset, this._code, re.ToString());
-            this._offset += m.Length;
-            return m;
+            return this.matchRegexp(re, skipWhiteChars, true);
         }
 
         /// <summary>
@@ -163,7 +183,7 @@ namespace JSLOL.Parser
         /// <returns>matched data</returns>
         protected Match matchMandatoryRegexp(Regex re)
         {
-            return this.matchMandatoryRegexp(re,false);
+            return this.matchRegexp(re,false,true);
         }
 
         /// <summary>
@@ -173,7 +193,25 @@ namespace JSLOL.Parser
         /// <returns>matched data</returns>
         protected Match matchRegexp(Regex re)
         {
+            return this.matchRegexp(re,false,false);
+        }
+
+        /// <summary>
+        /// Matches given Regex object against the code with current offset.
+        /// </summary>
+        /// <param name="re">Regex to match</param>
+        /// <param name="skipWhiteChars">Allows presence of white chars before matching</param>
+        /// <param name="mandatory">Indicates if method throws CodeElementNotFound exception on failure</param>
+        /// <returns>Match object</returns>
+        protected Match matchRegexp(Regex re,bool skipWhiteChars,bool mandatory)
+        {
+            if (skipWhiteChars)
+                this.skipWhiteChars(true);
+            
             Match m = this._code.match(re, this._offset);
+            if (mandatory && !m.Success)
+                throw new CodeElementNotFound(this._offset, this._code, re.ToString());
+
             this._offset += m.Length;
             return m;
         }

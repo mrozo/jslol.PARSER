@@ -8,16 +8,20 @@ using Cmd = System.Console;
 
 namespace JSLOL.Parser
 {
+    /// <summary>
+    /// Class to parse field declaration : <![CDATA[<typeName> <name> [<assertion>]]]>
+    /// </summary>
     public class Declaration : CodeElement
     {
-        //regexp for matching field signature
+        /// <summary>
+        /// regexp for matching field signature
+        /// </summary>
         static private Regex signatureRE = Toolbox.CreateRegex(
-                @"(?<type>" + Toolbox.RegExpSources[TEST.identificator] +
-                @"(\." + Toolbox.RegExpSources[TEST.identificator] + @")*)" +
-                Toolbox.RegExpSources[TEST.whiteChar] + @"*" +
-                @"(?<advtype>" + Toolbox.RegExpSources[TEST.advType] + @")?" +
-                Toolbox.RegExpSources[TEST.whiteChar] + @"+" + 
-                @"(?<name>" + Toolbox.RegExpSources[TEST.identificator] + @")"
+                @"(?<type>" + Toolbox.RegExpSources[Toolbox.RegExpTemplates.identificator] + ")" +
+                Toolbox.RegExpSources[Toolbox.RegExpTemplates.whiteChar] + @"*" +
+                @"(?<advtype>" + Toolbox.RegExpSources[Toolbox.RegExpTemplates.advType] + @")?" +
+                Toolbox.RegExpSources[Toolbox.RegExpTemplates.whiteChar] + @"+" +
+                @"(?<name>" + Toolbox.RegExpSources[Toolbox.RegExpTemplates.name] + @")"
             );
         static private int[] allowedCodeElements 
             { get { throw new NotImplementedException();} }
@@ -29,9 +33,6 @@ namespace JSLOL.Parser
 
         override protected int[] _allowedCodeElements { get { return ObjectElement.allowedCodeElements; } }
 
-        public Declaration(Code code) : base(code, 0,0) { }
-        public Declaration(Code code,int offset) : base(code,offset,0) { }
-        public Declaration(Code code, int offset, int indentionLevel) : base(code, offset, indentionLevel) { }
 
         protected override void Parse() 
         {
@@ -42,8 +43,12 @@ namespace JSLOL.Parser
             this._advType = m.Groups["advtype"].Success ? m.Groups["advtype"].Value : null;
             this._match = m.Value;
 
-            this.matchCodeElement((int)Toolbox.codeElements.Assertion);
+            this.matchCodeElement((int)Toolbox.codeElement.Assertion);
         }
+
+        public Declaration(Code code) : base(code, 0, 0) { }
+        public Declaration(Code code, int offset) : base(code, offset, 0) { }
+        public Declaration(Code code, int offset, int indentionLevel) : base(code, offset, indentionLevel) { }
 
     }
 }

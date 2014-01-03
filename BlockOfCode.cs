@@ -6,6 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace JSLOL.Parser
 {
+    /// <summary>
+    /// Class to parse methods body
+    /// </summary>
     class BlockOfCode : ContainerCodeElement
     {
         static Regex startMarker = Toolbox.CreateRegex(Toolbox.RegExpTemplates.blockOfCodeStartMarker);
@@ -13,8 +16,8 @@ namespace JSLOL.Parser
 
         static public int[] allowedCodeElements = 
         {
-            (int)Toolbox.codeElements.Instruction
-            ,(int)Toolbox.codeElements.Comment
+            (int)Toolbox.codeElement.Instruction
+            ,(int)Toolbox.codeElement.Comment
         };
         protected override System.Text.RegularExpressions.Regex _startMarker
             { get { return BlockOfCode.startMarker; } }

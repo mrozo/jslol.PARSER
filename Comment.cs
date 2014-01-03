@@ -7,6 +7,9 @@ using System.Text.RegularExpressions;
 
 namespace JSLOL.Parser
 {
+    /// <summary>
+    /// Class to parse comments
+    /// </summary>
     class Comment : CodeElement
 
     {
@@ -17,7 +20,7 @@ namespace JSLOL.Parser
 
         protected override void Parse()
         {
-            this.value = this.matchMandatoryRegexp(Comment.CommentRE).Value;
+            this.value = this.matchMandatoryRegexp(Comment.CommentRE,true).Value;
         }
 
         public Comment(Code code) : base(code, 0, 0) { }

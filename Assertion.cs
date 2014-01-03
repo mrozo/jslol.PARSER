@@ -8,12 +8,12 @@ using System.Text.RegularExpressions;
 namespace JSLOL.Parser
 {
     /// <summary>
-    /// Class to parse assertion to a variable
+    /// Class to parse assertion to a variable : <![CDATA[ = <expression> ]]>
     /// </summary>
     class Assertion : CodeElement
     {
         static int[] AllowedCodeElements = {
-            (int)Toolbox.codeElements.Expression
+            (int)Toolbox.codeElement.Expression
         };
 
         protected override int[] _allowedCodeElements
@@ -26,7 +26,7 @@ namespace JSLOL.Parser
         protected override void Parse()
         {
             this.matchMandatoryRegexp(Toolbox.stdRegex[Toolbox.RegExpTemplates.assertion]);
-            this.matchAllowedCodeElementsOnce(); 
+            this.matchAllowedCodeElement(); 
         }
 
     }

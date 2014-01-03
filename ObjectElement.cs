@@ -11,8 +11,8 @@ namespace JSLOL.Parser
         static Regex startMarker = Toolbox.CreateRegex(Toolbox.RegExpSources[Toolbox.RegExpTemplates.objectStart]);
         static Regex stopMarker  = Toolbox.CreateRegex(Toolbox.RegExpSources[Toolbox.RegExpTemplates.objectStop]);
         static public int[] allowedCodeElements = {
-            (int)Toolbox.codeElements.FieldDeclaration
-            ,(int)Toolbox.codeElements.Comment
+            (int)Toolbox.codeElement.FieldDeclaration
+            ,(int)Toolbox.codeElement.Comment
         };
 
         override protected Regex _startMarker  {

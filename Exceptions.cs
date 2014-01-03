@@ -5,12 +5,19 @@ using System.Text;
 
 namespace JSLOL.Parser
 {
+    /// <summary>
+    /// Exception that can not be recovered.
+    /// </summary>
     public class CriticalException : Exception
     {
         public CriticalException(String message, Exception innerException) : base(message, innerException) { }
         public CriticalException(String message) : base(message) { }
     }
 
+
+    /// <summary>
+    /// Exception used indicate failure in matching code element.
+    /// </summary>
     public class CodeElementNotFound : SystemException
     {
         public CodeElementNotFound(int offset, Code code, String regex) 

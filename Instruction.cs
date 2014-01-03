@@ -5,11 +5,15 @@ using System.Text;
 
 namespace JSLOL.Parser
 {
+    /// <summary>
+    /// General element for method, that implements logic of the program.
+    /// </summary>
     class Instruction : CodeElement
     {
         public static int[] allowedCodeElements = 
         {
-            (int)Toolbox.codeElements.Declaration
+            (int)Toolbox.codeElement.Declaration
+            ,(int)Toolbox.codeElement.MethodCall
         };
 
         protected override int[] _allowedCodeElements
@@ -19,7 +23,7 @@ namespace JSLOL.Parser
 
         protected override void Parse()
         {
-            this.matchAllowedCodeElementsOnce();
+            this.matchAllowedCodeElement();
             this.matchEndOfInstructionMarker();
         }
         

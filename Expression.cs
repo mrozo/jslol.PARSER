@@ -14,9 +14,9 @@ namespace JSLOL.Parser
     {
 
         static public int[] allowedCodeElements = {
-            (int)Toolbox.codeElements.Number
-            ,(int)Toolbox.codeElements.String   
-            ,(int)Toolbox.codeElements.MethodElement   
+             (int)Toolbox.codeElement.MethodExpression   
+            ,(int)Toolbox.codeElement.Number
+            ,(int)Toolbox.codeElement.String
         };
         
         protected override int[] _allowedCodeElements
@@ -25,7 +25,7 @@ namespace JSLOL.Parser
         protected override void Parse()
         {
             //TODO: parsing extended expressions
-            this.matchAllowedCodeElementsOnce();
+            this.matchAllowedCodeElement();
             if (this.codeElements.Count==0)
                 throw new CodeElementNotFound();
         }
