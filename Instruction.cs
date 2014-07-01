@@ -13,6 +13,8 @@ namespace JSLOL.Parser
         public static int[] allowedCodeElements = 
         {
             (int)Toolbox.codeElement.Declaration
+            ,(int)Toolbox.codeElement.IfInstruction
+            ,(int)Toolbox.codeElement.WhileInstruction
             ,(int)Toolbox.codeElement.MethodCall
         };
 

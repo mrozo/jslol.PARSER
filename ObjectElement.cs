@@ -28,10 +28,9 @@ namespace JSLOL.Parser
         public ObjectElement(Code code,int offset) : base(code,offset,0) { }
         public ObjectElement(Code code, int offset, int indentionLevel) : base(code, offset, indentionLevel) { }
 
-        protected override void Parse()
+        public override String toCSharp(String ns)
         {
-            this.matchAllowedTypesAndMarkers();
+            return this.subobjectsToCSharp(ns);
         }
-
     }
 }

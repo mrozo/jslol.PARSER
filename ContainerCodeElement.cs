@@ -7,11 +7,17 @@ using System.Text.RegularExpressions;
 namespace JSLOL.Parser
 {
     /// <summary>
-    /// base class that contains tools for fast creation container-type code elements parsers - eg. parser for class definition,dictionary, array etc.
+    /// Base class that contains tools for fast creation container-type code elements parsers - eg. parser for class definition,dictionary, array etc.
     /// </summary>
     public abstract class ContainerCodeElement : CodeElement
     {
+        /// <summary>
+        /// Property that should return regular Regex object that matches start marker of a block. 
+        /// </summary>
         abstract protected Regex _startMarker { get; }
+        /// <summary>
+        /// Property that should return regular Regex object that matches stop marker of a block. 
+        /// </summary>
         abstract protected Regex _stopMarker { get; }
 
         public ContainerCodeElement(Code code) : base(code, 0, 0) { }
@@ -19,18 +25,16 @@ namespace JSLOL.Parser
         public ContainerCodeElement(Code code, int offset, int indentionLevel) : base(code, offset, indentionLevel) { }
 
         /// <summary>
-        /// Method that check all allowed code elements from this.allowedCodeElements in code preceded by this._startMarker and followed by this._stopMarker 
+        /// Method that checks all allowed code elements from this.allowedCodeElements in code preceded by this._startMarker and followed by this._stopMarker 
         /// </summary>
-        protected void matchAllowedTypesAndMarkers()
+        protected override void Parse()
         {
-            this.matchMandatoryRegexp(this._startMarker,true);
+            this.matchMandatoryRegexp(this._startMarker, true);
             this.matchAllowedTypes();
-
-            this.matchMandatoryRegexp(this._stopMarker,true);
+            this.matchMandatoryRegexp(this._stopMarker, true);
         }
-        
         /// <summary>
-        /// Method that check all allowed code elements from this.allowedCodeElements in code
+        /// Method that checks all allowed code elements from this.allowedCodeElements in code
         /// </summary>
         protected void matchAllowedTypes()
         {

@@ -17,6 +17,7 @@ namespace JSLOL.Parser
 
         public static int[] allowedCodeElements ={
             (int)Toolbox.codeElement.Expression
+            ,(int)Toolbox.codeElement.VariableExpression
         };
 
         protected override int[] _allowedCodeElements

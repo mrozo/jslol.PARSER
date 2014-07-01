@@ -29,10 +29,8 @@ namespace JSLOL.Parser
         static Regex stopMarker = Toolbox.CreateRegex(Toolbox.RegExpSources[Toolbox.RegExpTemplates.objectStop]);
 
         private String _type, _advType, _name, _match;
-        private CodeElement initialization = null;
 
         override protected int[] _allowedCodeElements { get { return ObjectElement.allowedCodeElements; } }
-
 
         protected override void Parse() 
         {
@@ -44,6 +42,14 @@ namespace JSLOL.Parser
             this._match = m.Value;
 
             this.matchCodeElement((int)Toolbox.codeElement.Assertion);
+        }
+
+        public override string toCSharp(string ns)
+        {
+            String csCode = "";
+
+
+            return csCode;
         }
 
         public Declaration(Code code) : base(code, 0, 0) { }

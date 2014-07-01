@@ -11,11 +11,12 @@ namespace JSLOL.Parser
     /// </summary>
     public class Code
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public String source { get; private set; }
-        private List<String> _typesRegistry = new List<string>();
-        public List<String> typesRegistry
-            { get { return this._typesRegistry; } }
 
+        private String _classDefinitions = "";
 
         public Code(String str)
         {
@@ -26,7 +27,7 @@ namespace JSLOL.Parser
         /// Matches and returns white chars from the beggining of the code
         /// </summary>
         /// <param name="offset">Number of chars to skip before matching</param>
-        /// <returns></returns>
+        /// <returns>Mtch object</returns>
         public Match getWhiteChars(int offset)
         {
             return this.getWhiteChars(offset,false);
@@ -56,5 +57,6 @@ namespace JSLOL.Parser
         {
             return r.Match(this.source, offset);
         }
+
     }
 }

@@ -50,10 +50,11 @@
     <Compile Include="Exceptions.cs" />
     <Compile Include="Expression.cs" />
     <Compile Include="FieldDeclaration.cs" />
+    <Compile Include="IfInstruction.cs" />
     <Compile Include="Instruction.cs" />
     <Compile Include="JSLOLParser.cs" />
     <Compile Include="ListCodeElement.cs" />
-    <Compile Include="ArgumentsDeclarationList.cs" />
+    <Compile Include="ArgumentsDeclarationsList.cs" />
     <Compile Include="MethodCall.cs" />
     <Compile Include="MethodExpression.cs" />
     <Compile Include="NumberElement.cs" />
@@ -62,6 +63,8 @@
     <Compile Include="SourceFile.cs" />
     <Compile Include="StringElement.cs" />
     <Compile Include="Toolbox.cs" />
+    <Compile Include="VariableExpression.cs" />
+    <Compile Include="WhileInstruction.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

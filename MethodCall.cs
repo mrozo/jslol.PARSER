@@ -20,7 +20,7 @@ namespace JSLOL.Parser
         protected override void Parse()
         {
             this.name = this.matchMandatoryRegexp(MethodCall.methodName).Value;
-            this.matchMandatoryCodeElement((int)Toolbox.codeElement.ArgumentsDeclarationsList);
+            this.matchMandatoryCodeElement((int)Toolbox.codeElement.ArgumentsList);
         }
 
         public MethodCall(Code code) : base(code, 0,0) { }

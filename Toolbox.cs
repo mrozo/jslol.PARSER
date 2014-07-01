@@ -32,6 +32,9 @@ namespace JSLOL.Parser
             ,BlockOfCode
             ,Instruction
             ,ArgumentsList
+            ,VariableExpression
+            ,IfInstruction
+            ,WhileInstruction
         };
 
         /// <summary>
@@ -62,6 +65,8 @@ namespace JSLOL.Parser
             ,blockOfCodeStartMarker
             ,blockOfCodeStopMarker
             ,argumentListSeparator
+            ,controlInstructionArgumentStartMarker
+            ,controlInstructionArgumentStopMarker
         };
 
         /// <summary>
@@ -80,7 +85,7 @@ namespace JSLOL.Parser
                 ,{RegExpTemplates.whiteCharsNewL,@"[ \t\n\r]+"}
                 ,{RegExpTemplates.arrayStart,@"\["}
                 ,{RegExpTemplates.arrayEnd,@"\]"}
-                ,{RegExpTemplates.number,@"[+-]?[0-9]*\.[0-9]"}
+                ,{RegExpTemplates.number,@"[+-]?[0-9]+(\.[0-9]*)?"}
                 ,{RegExpTemplates.assertion,@"="}
                 ,{RegExpTemplates.endOfInstruction,@";"}
                 ,{RegExpTemplates.comment,@"#([^\n\r]*|(\\)*)*"}
@@ -91,6 +96,8 @@ namespace JSLOL.Parser
                 ,{RegExpTemplates.blockOfCodeStartMarker,@"{"}
                 ,{RegExpTemplates.blockOfCodeStopMarker,@"}"}
                 ,{RegExpTemplates.argumentListSeparator,@","}
+                ,{RegExpTemplates.controlInstructionArgumentStartMarker,@"\("}
+                ,{RegExpTemplates.controlInstructionArgumentStopMarker,@"\)"}
 
             };
 
@@ -101,12 +108,14 @@ namespace JSLOL.Parser
 
             Toolbox.stdRegex = new Dictionary<RegExpTemplates, Regex>()
             {
-                {RegExpTemplates.whiteChar, Toolbox.CreateRegex(Toolbox.RegExpSources[RegExpTemplates.whiteChar])},
-                {RegExpTemplates.whiteCharNewL, Toolbox.CreateRegex(Toolbox.RegExpSources[RegExpTemplates.whiteCharNewL])},
-                {RegExpTemplates.whiteChars, Toolbox.CreateRegex(Toolbox.RegExpSources[RegExpTemplates.whiteChars])},
-                {RegExpTemplates.whiteCharsNewL, Toolbox.CreateRegex(Toolbox.RegExpSources[RegExpTemplates.whiteCharsNewL])},
-                {RegExpTemplates.endOfInstruction, Toolbox.CreateRegex(Toolbox.RegExpSources[RegExpTemplates.endOfInstruction])},
-                {RegExpTemplates.assertion, Toolbox.CreateRegex(Toolbox.RegExpSources[RegExpTemplates.assertion])}
+                {RegExpTemplates.whiteChar, Toolbox.CreateRegex(Toolbox.RegExpSources[RegExpTemplates.whiteChar])}
+                ,{RegExpTemplates.whiteCharNewL, Toolbox.CreateRegex(Toolbox.RegExpSources[RegExpTemplates.whiteCharNewL])}
+                ,{RegExpTemplates.whiteChars, Toolbox.CreateRegex(Toolbox.RegExpSources[RegExpTemplates.whiteChars])}
+                ,{RegExpTemplates.whiteCharsNewL, Toolbox.CreateRegex(Toolbox.RegExpSources[RegExpTemplates.whiteCharsNewL])}
+                ,{RegExpTemplates.endOfInstruction, Toolbox.CreateRegex(Toolbox.RegExpSources[RegExpTemplates.endOfInstruction])}
+                ,{RegExpTemplates.assertion, Toolbox.CreateRegex(Toolbox.RegExpSources[RegExpTemplates.assertion])}
+                ,{RegExpTemplates.identificator, Toolbox.CreateRegex(Toolbox.RegExpSources[RegExpTemplates.identificator])}
+                ,{RegExpTemplates.name, Toolbox.CreateRegex(Toolbox.RegExpSources[RegExpTemplates.name])}
             };
 
         }
@@ -163,6 +172,9 @@ namespace JSLOL.Parser
                     case (int)Toolbox.codeElement.ArgumentsDeclarationsList: return new ArgumentsDeclarationsList(code, offset, indentionLevel);
                     case (int)Toolbox.codeElement.BlockOfCode: return new BlockOfCode(code, offset, indentionLevel);
                     case (int)Toolbox.codeElement.Instruction: return new Instruction(code, offset, indentionLevel);
+                    case (int)Toolbox.codeElement.VariableExpression: return new VariableExpression(code, offset, indentionLevel);
+                    case (int)Toolbox.codeElement.IfInstruction: return new IfInstruction(code, offset, indentionLevel);
+                    case (int)Toolbox.codeElement.WhileInstruction: return new WhileInstruction(code, offset, indentionLevel);
                     
                     default: throw new CriticalException("Internal parser exception : unknown code element id : "+id.ToString());
                 }

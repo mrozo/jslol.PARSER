@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 namespace JSLOL.Parser
 {
     /// <summary>
-    /// Class to parse <![CDATA[<argumentsList>]]> that is a part of <![CDATA[<methodExpression>]]>
+    /// Class to parse <![CDATA[<argumentsDeclarationList>]]>
     /// </summary>
     class ArgumentsDeclarationsList : ListCodeElement
     {

@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 
 #if DEBUG
 using System.Reflection;
+using System.Diagnostics;
 #endif
 
 namespace JSLOL.Parser
@@ -17,7 +18,8 @@ namespace JSLOL.Parser
     public abstract class CodeElement
     {
         protected Code _code;
-        protected int _indentionLevel;
+        protected int _indentLevel;
+        protected String _indention;
         abstract protected int[] _allowedCodeElements { get; }
 
         /// <summary>
@@ -52,24 +54,27 @@ namespace JSLOL.Parser
         /// <param name="indentionLevel">Code indention level aka. number of '\t'</param>
         public CodeElement(Code code, int offset, int indentionLevel)
         {
-#if DEBUG
-            if (this.GetType().Name == typeof(ObjectElement).Name)
-                Console.WriteLine();
-#endif
-
             this._code = code;
             this._offset = offset;
             this._startOffset = offset;
-            this._indentionLevel = indentionLevel;
+            this._indentLevel = indentionLevel;
+            this._indention = new String('\t', this._indentLevel);
             this.Parse(); //throws CodeElementNotFound exception
             this._stopOffset = this._offset;
 
 #if DEBUG
-            Console.WriteLine("offset : {0} :: Found {1} : '{2}'",
-                this.offset,
+            String codeFragment ;
+            if (this._stopOffset - this._startOffset > 30)
+                codeFragment = this._code.source.Substring(this._startOffset, 15) + " (...) " + this._code.source.Substring(this._stopOffset - 8, 8);
+            else
+                codeFragment = this._code.source.Substring(this._startOffset, this._stopOffset - this._startOffset);
+            codeFragment = codeFragment.Replace("\r\n","\\n");
+            Debug.WriteLine(String.Format("offset : {0} to {1} :: Found {2} : '{3:20}'",
+                this._startOffset,
+                this._stopOffset,
                 this.GetType().Name,
-                this._code.source.Substring(this._startOffset,this._stopOffset-this._startOffset)
-            );
+                codeFragment
+            ));
 #endif
 
         }
@@ -83,7 +88,7 @@ namespace JSLOL.Parser
         /// <returns></returns>
         protected CodeElement matchCodeElement(int eID, bool mandatory)
         {
-            CodeElement e = Toolbox.createCodeElement(eID, this._code, this._offset, this._indentionLevel);
+            CodeElement e = Toolbox.createCodeElement(eID, this._code, this._offset, this._indentLevel);
             if (e != null)
             {
                 this.codeElements.Add(e);
@@ -197,7 +202,7 @@ namespace JSLOL.Parser
         }
 
         /// <summary>
-        /// Matches given Regex object against the code with current offset.
+        /// Matches given Regex object against the code with current offset. Icrease offset on success
         /// </summary>
         /// <param name="re">Regex to match</param>
         /// <param name="skipWhiteChars">Allows presence of white chars before matching</param>
@@ -217,9 +222,30 @@ namespace JSLOL.Parser
         }
 
         /// <summary>
-        /// The main methot that parses the code.
+        /// Calls toCSHarp() for evry contained CodeElement
+        /// <param name="ns">namespace to put code in</param>
+        /// <returns>C# code returned by calls</returns>
+        virtual protected String subobjectsToCSharp(String ns)
+        {
+            String cSharpCode = "";
+            foreach (CodeElement e in this.codeElements)
+                cSharpCode += e.toCSharp(ns);
+            return cSharpCode;
+        }
+
+        /// <summary>
+        /// The main methot that parses the code. 
         /// </summary>
         protected abstract void Parse();
+
+        /// <summary>
+        /// Parse object and all its subobjects to C# code
+        /// </summary>
+        /// <returns>C# code</returns>
+        public virtual String toCSharp(String ns)
+        {
+            throw new NotImplementedException();
+        }
 
 
     }

@@ -13,10 +13,11 @@ namespace JSLOL.Parser
     public class Expression : CodeElement
     {
 
-        static public int[] allowedCodeElements = {
-             (int)Toolbox.codeElement.MethodExpression   
-            ,(int)Toolbox.codeElement.Number
+        static public int[] allowedCodeElements = { 
+            (int)Toolbox.codeElement.Number
             ,(int)Toolbox.codeElement.String
+            ,(int)Toolbox.codeElement.MethodExpression
+            ,(int)Toolbox.codeElement.VariableExpression
         };
         
         protected override int[] _allowedCodeElements
@@ -24,7 +25,7 @@ namespace JSLOL.Parser
 
         protected override void Parse()
         {
-            //TODO: parsing extended expressions
+            //TODO: parsing extended expressions, eg 1 + intVar, 2*methodCall() etc.
             this.matchAllowedCodeElement();
             if (this.codeElements.Count==0)
                 throw new CodeElementNotFound();

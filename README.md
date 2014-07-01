@@ -35,8 +35,6 @@ namespace JSLOL.example
         static void Main(string[] args)
         {
             CodeElement parsedCode = new SourceFile(source) as CodeElement;
-            String translatedCode = parsedCode.toCSharp();  //not implemented yet
-            //use .NET compiler to compile the C# code
         }
     }
 }

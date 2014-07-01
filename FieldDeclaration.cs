@@ -20,5 +20,10 @@ namespace JSLOL.Parser
             base.Parse();
             this.matchEndOfInstructionMarker();
         }
+
+        public override string toCSharp(string ns)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

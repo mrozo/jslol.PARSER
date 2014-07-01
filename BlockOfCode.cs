@@ -19,19 +19,14 @@ namespace JSLOL.Parser
             (int)Toolbox.codeElement.Instruction
             ,(int)Toolbox.codeElement.Comment
         };
-        protected override System.Text.RegularExpressions.Regex _startMarker
+        protected override Regex _startMarker
             { get { return BlockOfCode.startMarker; } }
 
-        protected override System.Text.RegularExpressions.Regex _stopMarker
+        protected override Regex _stopMarker
             { get { return BlockOfCode.stopMarker; } }
 
         protected override int[] _allowedCodeElements
             { get { return BlockOfCode.allowedCodeElements; } }
-
-        protected override void Parse()
-        {
-            this.matchAllowedTypesAndMarkers();
-        }
 
         public BlockOfCode(Code code) : base(code, 0, 0) { }
         public BlockOfCode(Code code, int offset) : base(code, offset, 0) { }

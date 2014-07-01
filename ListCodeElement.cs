@@ -25,9 +25,7 @@ namespace JSLOL.Parser
 
         protected override void Parse()
         {
-            this.skipWhiteChars();
             this.matchMandatoryRegexp(this._startMarker);
-
             do
             {
                 this.matchCodeElement((int)Toolbox.codeElement.Comment);
